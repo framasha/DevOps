@@ -1,0 +1,16 @@
+---
+
+- hosts: datacenter_servers
+  become: yes
+  vars:
+    ssh_keys:
+      - user1: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD..."
+      
+  tasks:
+  - name: Copy user's SSH public keys
+    authorized_key:
+      user: "{{ item.key }}"
+      state: present
+      key: "{{ item.value }}"
+    with_dict: "{{ ssh_keys }}"
+    when: item.key == "user1"
